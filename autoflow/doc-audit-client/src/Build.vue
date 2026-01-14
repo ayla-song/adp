@@ -3,7 +3,7 @@
     <Audit></Audit>
   </div>
 </template>
-<script src="../public/AnyShare/js/anyshare.sdk.js"></script>
+<!-- <script src="../public/AnyShare/js/anyshare.sdk.js"></script> -->
 <script>
   import Vue from 'vue'
   import Audit from './views/audit/index.vue'
@@ -28,5 +28,5 @@
 <style lang="css">
   @import "../public/fonts/iconfont.css";
   @import "../public/css/rzsj_style.css";
-  @import "../public/AnyShare/css/anyshare.sdk.css";
+  /* @import "../public/AnyShare/css/anyshare.sdk.css"; */
 </style>
