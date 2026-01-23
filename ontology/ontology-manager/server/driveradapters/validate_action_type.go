@@ -14,6 +14,44 @@ import (
 	"ontology-manager/interfaces"
 )
 
+func ValidateActionTypes(ctx context.Context, knID string, actionTypes []*interfaces.ActionType) error {
+	tmpNameMap := make(map[string]any)
+	idMap := make(map[string]any)
+	for i := 0; i < len(actionTypes); i++ {
+		// 校验导入模型时模块是否是行动类
+		if actionTypes[i].ModuleType != "" && actionTypes[i].ModuleType != interfaces.MODULE_TYPE_ACTION_TYPE {
+			return rest.NewHTTPError(ctx, http.StatusForbidden, oerrors.OntologyManager_InvalidParameter_ModuleType).
+				WithErrorDetails("Action type name is not 'action_type'")
+		}
+
+		// 0.校验请求体中多个模型 ID 是否重复
+		atID := actionTypes[i].ATID
+		if _, ok := idMap[atID]; !ok || atID == "" {
+			idMap[atID] = nil
+		} else {
+			errDetails := fmt.Sprintf("ActionType ID '%s' already exists in the request body", atID)
+			return rest.NewHTTPError(ctx, http.StatusBadRequest, oerrors.OntologyManager_ActionType_Duplicated_IDInFile).
+				WithDescription(map[string]any{"actionTypeID": atID}).
+				WithErrorDetails(errDetails)
+		}
+
+		// 1. 校验 行动类必要创建参数的合法性, 非空、长度、是枚举值
+		err := ValidateActionType(ctx, actionTypes[i])
+		if err != nil {
+			return err
+		}
+
+		// 3. 校验 请求体中行动类名称重复性
+		if _, ok := tmpNameMap[actionTypes[i].ATName]; !ok {
+			tmpNameMap[actionTypes[i].ATName] = nil
+		} else {
+			return rest.NewHTTPError(ctx, http.StatusBadRequest, oerrors.OntologyManager_ActionType_Duplicated_Name)
+		}
+		actionTypes[i].KNID = knID
+	}
+	return nil
+}
+
 // 对象类必要创建参数的非空校验。
 func ValidateActionType(ctx context.Context, actionType *interfaces.ActionType) error {
 	// 校验id的合法性
@@ -83,7 +121,7 @@ func ValidateActionType(ctx context.Context, actionType *interfaces.ActionType) 
 
 	// 行动条件非空时，校验行动条件
 	if actionType.Condition != nil {
-		err = validateActionCondition(ctx, actionType.Condition)
+		err = validateActionCondition(ctx, actionType.Condition, actionType.ObjectTypeID)
 		if err != nil {
 			return err
 		}
@@ -93,15 +131,19 @@ func ValidateActionType(ctx context.Context, actionType *interfaces.ActionType) 
 }
 
 // 校验行动条件的合法性
-func validateActionCondition(ctx context.Context, cfg *interfaces.CondCfg) error {
+func validateActionCondition(ctx context.Context, cfg *interfaces.CondCfg, objectTypeID string) error {
 	if cfg == nil {
 		return nil
 	}
 
+	// 如果行动条件不给对象类id，那么就默认使用行动类的对象类id
 	if cfg.ObjectTypeID == "" {
-		return rest.NewHTTPError(ctx, http.StatusBadRequest, oerrors.OntologyManager_ActionType_InvalidParameter).
-			WithErrorDetails("行动条件的对象类不能为空")
+		cfg.ObjectTypeID = objectTypeID
 	}
+	// if cfg.ObjectTypeID == "" {
+	// 	return rest.NewHTTPError(ctx, http.StatusBadRequest, oerrors.OntologyManager_ActionType_InvalidParameter).
+	// 		WithErrorDetails("行动条件的对象类不能为空")
+	// }
 
 	// 过滤操作符
 	if cfg.Operation == "" {
@@ -124,7 +166,7 @@ func validateActionCondition(ctx context.Context, cfg *interfaces.CondCfg) error
 		}
 
 		for _, subCond := range cfg.SubConds {
-			err := validateActionCondition(ctx, subCond)
+			err := validateActionCondition(ctx, subCond, objectTypeID)
 			if err != nil {
 				return err
 			}
