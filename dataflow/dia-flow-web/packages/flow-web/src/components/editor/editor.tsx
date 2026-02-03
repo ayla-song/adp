@@ -971,6 +971,7 @@ export const Editor = forwardRef<Instance, EditorProps>((props, ref) => {
                     () => (
                         <ExecutorConfig
                             step={currentStep?.value}
+                            dagsId={props?.dagsId}
                             onFinish={(value) => {
                                 setCurrentStep(undefined);
                                 currentStep?.onFinish({
