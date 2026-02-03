@@ -115,10 +115,8 @@ const DataAttribute = forwardRef((props: TProps, ref) => {
         console.log('localDataProperties', localDataProperties);
         return new Promise((resolve, reject) => {
           if (localDataProperties.length === 0) {
-            resolve({
-              dataProperties: localDataProperties,
-              dataSource: dataViewInfo,
-            });
+            setAlertMessage(intl.get('Object.dataPropertiesRequired'));
+            reject(new Error(intl.get('Object.dataPropertiesRequired')));
             return;
           }
 
@@ -331,6 +329,7 @@ const DataAttribute = forwardRef((props: TProps, ref) => {
               display_key: data.display_key || false,
               incremental_key: data.incremental_key || false,
               mapped_field: p.mapped_field,
+              index_config: p.index_config,
             };
           }
           if (data.display_key && p.display_key) {
@@ -564,6 +563,11 @@ const DataAttribute = forwardRef((props: TProps, ref) => {
         display_name: f.display_name,
         type: f.type,
         comment: f.comment,
+        mapped_field: {
+          name: f.name,
+          display_name: f.display_name,
+          type: f.type,
+        },
       }));
     setLocalDataProperties((prev) => [...newAttributes, ...prev]);
   };
@@ -666,7 +670,7 @@ const DataAttribute = forwardRef((props: TProps, ref) => {
           nodeTypes={nodeTypes as any}
           edgeTypes={edgeTypes}
           proOptions={{ hideAttribution: true }}
-          nodesDraggable={false}
+          nodesDraggable={true}
           nodesConnectable={true}
           nodesFocusable={false}
           edgesFocusable={true}
