@@ -297,7 +297,7 @@ const SelectFileLib = forwardRef(
                                     type="file"
                                     ref={fileInputRef}
                                     multiple
-                                    accept=".pdf,.doc"
+                                    // accept=".pdf,.doc"
                                     style={{ display: "none" }}
                                     onChange={(e) => {
                                         const files = Array.from(
