@@ -166,14 +166,14 @@ const SelectFileLib = forwardRef(
             // maxCount: 5, // 最多5个文件
             showUploadList: false,
             // accept: '.pdf,.doc', // 限制文件类型
-            // beforeUpload: (file: any) => {
-            //     // 校验文件大小，不超过2M
-            //     if (file.size > 2 * 1024 * 1024) {
-            //         message.warning(`${file.name} ${t('err.fileSizeExceed', '当前文件大小超过2MB，无法上传。')}`);
-            //         return false;
-            //     }
-            //     return true;
-            // },
+            beforeUpload: (file: any) => {
+                // 校验文件大小，不超过2M
+                if (file.size > 1 * 1024 * 1024 * 1024) {
+                    message.warning(`${file.name} ${t('err.fileSizeExceed.1g')}`);
+                    return false;
+                }
+                return true;
+            },
             onChange(info: any) {
                 const { status, name } = info.file;
                 if (status === "done") {
@@ -304,11 +304,11 @@ const SelectFileLib = forwardRef(
                                             e.target.files || [],
                                         );
                                         files.forEach((file) => {
-                                            // 校验文件大小，不超过2M
-                                            // if (file.size > 2 * 1024 * 1024) {
-                                            //     message.warning(`${file.name} ${t('err.fileSizeExceed', '当前文件大小超过2MB，无法上传。')}`);
-                                            //     return;
-                                            // }
+                                            // 校验文件大小，不超过1
+                                            if (file.size > 1 * 1024 * 1024 * 1024) {
+                                                message.warning(`${file.name} ${t('err.fileSizeExceed.1g')}`);
+                                                return;
+                                            }
                                             customRequest({
                                                 file,
                                                 onSuccess: (response: any) => {
