@@ -167,7 +167,7 @@ const SelectFileLib = forwardRef(
             showUploadList: false,
             // accept: '.pdf,.doc', // 限制文件类型
             beforeUpload: (file: any) => {
-                // 校验文件大小，不超过2M
+                // 校验文件大小，不超过1G
                 if (file.size > 1 * 1024 * 1024 * 1024) {
                     message.warning(`${file.name} ${t('err.fileSizeExceed.1g')}`);
                     return false;
@@ -304,7 +304,7 @@ const SelectFileLib = forwardRef(
                                             e.target.files || [],
                                         );
                                         files.forEach((file) => {
-                                            // 校验文件大小，不超过1
+                                            // 校验文件大小，不超过1G
                                             if (file.size > 1 * 1024 * 1024 * 1024) {
                                                 message.warning(`${file.name} ${t('err.fileSizeExceed.1g')}`);
                                                 return;
