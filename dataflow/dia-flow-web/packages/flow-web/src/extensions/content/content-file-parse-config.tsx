@@ -194,209 +194,230 @@ export const ContentFileParseConfig = forwardRef<
   };
 
   return (
-      <Form
-          form={form}
-          layout="vertical"
-          initialValues={parameters}
-          onFieldsChange={() => onChange(form.getFieldsValue())}
-      >
-          {source_type === SourceTypeEnum.Docid && (
-              <FormItem
-                  required
-                  label={t("extractFile", "文件")}
-                  name="docid"
-                  allowVariable
-                  type="asFile"
-                  rules={[
-                      {
-                          required: true,
-                          message: t("emptyMessage", "此项不能为空"),
-                      },
-                  ]}
-              >
-                  <AsFileSelect
-                      title={t("fileSelectTitle")}
-                      multiple={false}
-                      omitUnavailableItem
-                      selectType={1}
-                      placeholder={t("pdfFilePlaceholder", "请选择PDF或图片格式的文件")}
-                      selectButtonText={t("select")}
-                      supportExtensions={["pdf", "jpg", "jpeg", "png"]}
-                  />
-              </FormItem>
-          )}
+    <Form
+      form={form}
+      layout="vertical"
+      initialValues={parameters}
+      onFieldsChange={() => onChange(form.getFieldsValue())}
+    >
+      {source_type === SourceTypeEnum.Docid && (
+        <FormItem
+          required
+          label={t("extractFile", "文件")}
+          name="docid"
+          allowVariable
+          type="asFile"
+          rules={[
+            {
+              required: true,
+              message: t("emptyMessage", "此项不能为空"),
+            },
+          ]}
+        >
+          <AsFileSelect
+            title={t("fileSelectTitle")}
+            multiple={false}
+            omitUnavailableItem
+            selectType={1}
+            placeholder={t(
+              "pdfFilePlaceholder",
+              "请选择PDF或图片格式的文件",
+            )}
+            selectButtonText={t("select")}
+            supportExtensions={["pdf", "jpg", "jpeg", "png"]}
+          />
+        </FormItem>
+      )}
 
-          {source_type === SourceTypeEnum.Url && (
-              <FormItem
-                  required
-                  label="URL"
-                  name="url"
-                  allowVariable
-                  type="string"
-                  rules={[
-                      {
-                          required: true,
-                          message: t("emptyMessage", "此项不能为空"),
-                      },
-                  ]}
-              >
-                  <Input
-                      placeholder={t(
-                          "urlPlaceholder",
-              "请输入URL，示例：https://www.example.com/123.pdf"
-                      )}
-                  />
-              </FormItem>
-          )}
+      {source_type === SourceTypeEnum.Url && (
+        <FormItem
+          required
+          label="URL"
+          name="url"
+          allowVariable
+          type="string"
+          rules={[
+            {
+              required: true,
+              message: t("emptyMessage", "此项不能为空"),
+            },
+          ]}
+        >
+          <Input
+            placeholder={t(
+              "urlPlaceholder",
+              "请输入URL，示例：https://www.example.com/123.pdf",
+            )}
+          />
+        </FormItem>
+      )}
 
-          <FormItem name="source_type" style={{ marginTop: "-18px" }}>
-              <Switch
-                  className={styles["switch"]}
-                  size="small"
-                  defaultChecked={source_type === SourceTypeEnum.Url}
-                  onChange={(checked) => {
-                      form.setFieldValue(
-                          "source_type",
-              checked ? SourceTypeEnum.Url : SourceTypeEnum.Docid
-                      );
+      <FormItem name="source_type" style={{ marginTop: "-18px" }}>
+        <Switch
+          className={styles["switch"]}
+          size="small"
+          defaultChecked={source_type === SourceTypeEnum.Url}
+          onChange={(checked) => {
+            form.setFieldValue(
+              "source_type",
+              checked ? SourceTypeEnum.Url : SourceTypeEnum.Docid,
+            );
 
-                      onChange(form.getFieldsValue());
-                  }}
-              />
-              <div className={styles["switch-label"]}>
-                  {source_type === SourceTypeEnum.Url
-                      ? t(
-                            "urlSwitchLabelWithFormat",
-                "通过URL地址选择文件，支持PDF格式的文件"
-                        )
-                      : t("urlSwitchLabel", "通过URL地址选择文件")}
-              </div>
-          </FormItem>
+            onChange(form.getFieldsValue());
+          }}
+        />
+        <div className={styles["switch-label"]}>
+          {source_type === SourceTypeEnum.Url
+            ? t(
+              "urlSwitchLabelWithFormat",
+              "通过URL地址选择文件，支持PDF格式的文件",
+            )
+            : t("urlSwitchLabel", "通过URL地址选择文件")}
+        </div>
+      </FormItem>
 
-          {source_type === SourceTypeEnum.Docid && (
-              <FormItem
-                  label={t("version", "文件版本")}
-                  name="version"
-                  allowVariable
-                  type="string"
-              >
-                  <Input
-                      placeholder={t(
-                          "versionPlaceholder",
-              "请输入文件版本，默认获取所选文件的最新版本"
-                      )}
-                  />
-              </FormItem>
-          )}
+      {source_type === SourceTypeEnum.Docid && (
+        <FormItem
+          label={t("version", "文件版本")}
+          name="version"
+          allowVariable
+          type="string"
+        >
+          <Input
+            placeholder={t(
+              "versionPlaceholder",
+              "请输入文件版本，默认获取所选文件的最新版本",
+            )}
+          />
+        </FormItem>
+      )}
 
-          {source_type === SourceTypeEnum.Url && (
-              <>
-                  <FormItem
-                      required
-                      label={t("filename", "文件名称")}
-                      name="filename"
-                      allowVariable
-                      type="string"
-                      rules={[
-                          {
-                              required: true,
-                              message: t("emptyMessage", "此项不能为空"),
-                          },
-                      ]}
-                  >
-                      <Input placeholder={t("filenamePlaceholder", "请输入")} />
-                  </FormItem>
-                  <FormItem
-                      label={t("docid", "文件id")}
-                      name="docid"
-                      allowVariable
-                      type="string"
-                  >
-                      <Input placeholder={t("filenamePlaceholder", "请输入")} />
-                  </FormItem>
-              </>
-          )}
-
+      {source_type === SourceTypeEnum.Url && (
+        <>
           <FormItem
-              required
-              name="slice_vector"
-              label={t("sliceVectorConfig", "解析配置")}
+            required
+            label={t("filename", "文件名称")}
+            name="filename"
+            allowVariable
+            type="string"
+            rules={[
+              {
+                required: true,
+                message: t("emptyMessage", "此项不能为空"),
+              },
+            ]}
           >
-              <Radio.Group
-                  options={sliceVectorOptions}
-                  className={styles["slice-config-radio-group"]}
-              />
+            <Input placeholder={t("filenamePlaceholder", "请输入")} />
           </FormItem>
+          <FormItem
+            label={t("docid", "文件id")}
+            name="docid"
+            allowVariable
+            type="string"
+          >
+            <Input placeholder={t("filenamePlaceholder", "请输入")} />
+          </FormItem>
+        </>
+      )}
 
-          {/* 当开启“分片+向量化”时才显示模型选择 */}
-          {slice_vector === SliceVectorEnum.SliceVector && (
-              <FormItem
-                  name="model"
-                  rules={[
-                      {
-                          required: true,
-                          message: t("emptyMessage"),
-                      },
-                  ]}
-                  type="string"
-                  style={{ paddingLeft: 24, marginTop: "-24px" }}
-              >
-                  <Select
-                      options={embeddingModelOptions}
-                      placeholder={t("modelPlaceholder", "请选择")}
-                  />
-              </FormItem>
-          )}
-      <FormItem label={t("sliceVectorConfigMore", "解析高级配置")} className={styles["slice_vector_config"]}>
-        <FormItem name="multimodal_enabled" valuePropName="checked" className={styles["multimodal_enabled"]}>
-                  <Switch size="small" className={styles["switch"]} />
-              </FormItem>
-        <FormItem className={styles["multimodal_enabled_des"]}>{t("sliceVectorConfigMoreDesc")}</FormItem>
+      <FormItem
+        required
+        name="slice_vector"
+        label={t("sliceVectorConfig", "解析配置")}
+      >
+        <Radio.Group
+          options={sliceVectorOptions}
+          className={styles["slice-config-radio-group"]}
+        />
+      </FormItem>
+
+      {/* 当开启“分片+向量化”时才显示模型选择 */}
+      {slice_vector === SliceVectorEnum.SliceVector && (
+        <FormItem
+          name="model"
+          rules={[
+            {
+              required: true,
+              message: t("emptyMessage"),
+            },
+          ]}
+          type="string"
+          style={{ paddingLeft: 24, marginTop: "-24px" }}
+        >
+          <Select
+            options={embeddingModelOptions}
+            placeholder={t("modelPlaceholder", "请选择")}
+          />
+        </FormItem>
+      )}
+      <FormItem
+        label={t("sliceVectorConfigMore", "解析高级配置")}
+        className={styles["slice_vector_config"]}
+      >
+        <FormItem
+          name="multimodal_enabled"
+          valuePropName="checked"
+          className={styles["multimodal_enabled"]}
+        >
+          <Switch size="small" className={styles["switch"]} />
+        </FormItem>
+        <FormItem className={styles["multimodal_enabled_des"]}>
+          {t("sliceVectorConfigMoreDesc")}
+        </FormItem>
+      </FormItem>
+      {parameters?.multimodal_enabled && (
+        <div className={styles["multimodal"]}>
+          <FormItem noStyle>
+            <FormItem
+              label={t("multimodal", "多模态大模型")}
+              name="multimodal_model_name"
+              rules={[
+                {
+                  required: true,
+                  message: t("emptyMessage"),
+                },
+              ]}
+              style={{ width: "380px", display: "inline-block" }}
+            >
+              <Select
+                options={modelOptions}
+                placeholder={t("modelPlaceholder", "请选择")}
+              />
+            </FormItem>
+            <ModelSettingsPopover
+              t={aiTranslateFn}
+              initialSettings={settings}
+              onSettingsChange={(settings) =>
+                handleModelSettingsUpdate(settings)
+              }
+            >
+              <SettingOutlined
+                className="dip-c-subtext"
+                style={{
+                  fontSize: "16px",
+                  margin: "34px 0 0 12px",
+                }}
+              />
+            </ModelSettingsPopover>
           </FormItem>
-          {parameters?.multimodal_enabled && (
-              <div className={styles["multimodal"]}>
-                  <FormItem noStyle>
-                      <FormItem
-                          label={t("multimodal", "多模态大模型")}
-                          name="multimodal_model_name"
-                          rules={[
-                              {
-                                  required: true,
-                                  message: t("emptyMessage"),
-                              },
-                          ]}
-                          style={{ width: "380px", display: "inline-block" }}
-                      >
-                          <Select
-                              options={modelOptions}
-                              placeholder={t("modelPlaceholder", "请选择")}
-                          />
-                      </FormItem>
-                      <ModelSettingsPopover
-                          t={aiTranslateFn}
-                          initialSettings={settings}
-                          onSettingsChange={(settings) =>
-                              handleModelSettingsUpdate(settings)
-                          }
-                      >
-                          <SettingOutlined
-                              className="dip-c-subtext"
-                style={{ fontSize: "16px", margin: "34px 0 0 12px" }}
-                          />
-                      </ModelSettingsPopover>
-                  </FormItem>
-                  <FormItem
-                      name="multimodal_prompt_template"
-                      label={t("promptWords", "提示词")}
-                  >
-                      <EditorWithMentions
-                          onChange={textAreaContent}
-              parameters={parameters?.multimodal_prompt_template || t("imageDescriptionPrompt", "请详细描述这张图片的内容,包括: \n 1. 主要对象和场景 \n 2. 颜色和布局 \n 3. 图片类型(照片、图表、示意图等) \n 4. 其他重要细节 \n \n 请用简洁、准确的语言描述,不超过200字。")}
-                          itemName="multimodal_prompt_template"
-                      />
-                  </FormItem>
-              </div>
-          )}
-      </Form>
+          <FormItem
+            name="multimodal_prompt_template"
+            label={t("promptWords", "提示词")}
+          >
+            <EditorWithMentions
+              onChange={textAreaContent}
+              parameters={
+                parameters?.multimodal_prompt_template ||
+                t(
+                  "imageDescriptionPrompt",
+                  "请详细描述这张图片的内容,包括: \n 1. 主要对象和场景 \n 2. 颜色和布局 \n 3. 图片类型(照片、图表、示意图等) \n 4. 其他重要细节 \n \n 请用简洁、准确的语言描述,不超过200字。",
+                )
+              }
+              itemName="multimodal_prompt_template"
+            />
+          </FormItem>
+        </div>
+      )}
+    </Form>
   );
 });
