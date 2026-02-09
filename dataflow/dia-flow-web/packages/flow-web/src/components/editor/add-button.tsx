@@ -64,7 +64,7 @@ export const AddButton: FC<{
                 </div>
               </Tooltip>
             </div>
-            {platform === 'operator' && (
+            {platform !== 'operator' && (
               <div className={styles.addButtonGroupItem} onClick={onAddParallel}>
                 <Tooltip
                   placement="top"
